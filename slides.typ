@@ -11,9 +11,9 @@
 
   #v(2.4cm)
 
-  #text(12pt, "IIT Kanpur")
+  #text(12pt, "OOSC 2025, IIT Kanpur")
   #h(1fr)
-  #text(12pt, "5 Sept 2025")
+  #text(12pt, "Divy Srivastava")
 ]
 
 #let slide(title, body) = [
@@ -31,6 +31,17 @@
 ]
 
 #main("from", "Kernel to runtime")
+
+#slide("About me", [
+  #text("Software engineer @ Deno")
+
+  #linebreak()
+
+  Part of the core team working on the open source CLI.
+  I like runtimes, compilers and cryptography.
+
+  #text(fill: blue, "littledivy.com")
+])
 
 #slide("What's Deno?", [
   #grid(
