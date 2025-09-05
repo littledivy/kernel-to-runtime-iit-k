@@ -7,11 +7,11 @@
   #text(30pt, title)
 
   #v(1cm)
-  #text("peek inside a javascript runtime")
+  #text("Peek inside a JavaScript runtime")
 
   #v(2.4cm)
 
-  #text(12pt, "IIT Kanpur (OOSC)")
+  #text(12pt, "IIT Kanpur")
   #h(1fr)
   #text(12pt, "5 Sept 2025")
 ]
@@ -30,9 +30,8 @@
   #body
 ]
 
-#main("From", "kernel to runtime")
+#main("from", "Kernel to runtime")
 
-// Explain what Deno is
 #slide("What's Deno?", [
   #grid(
     columns: (1fr, auto),
@@ -50,7 +49,6 @@
   )
 ])
 
-// JS runtimes are single-threaded, epoll based event loop
 #slide("Single thread I/O", [
   Event loop is driven using epoll/IOCP when a file is ready, the kernel
   notifies epoll_wait()
@@ -92,13 +90,30 @@
   ```
 ])
 
-#align(horizon)[
-  #image("scheduling-1.svg", width: 10cm, height: 8cm, fit: "cover")
-]
+#grid(
+  columns: (1fr, auto),
+  column-gutter: 1em,
+  figure(
+    image("scheduling-1.svg", width: 10cm, height: 8cm, fit: "cover"),
+  ),
+  text(
+    "Sequential",
+  ),
+)
 
-#align(horizon)[
-  #image("scheduling-2.svg", width: 10cm, height: 9cm, fit: "cover")
-]
+#grid(
+  columns: (1fr, auto),
+  column-gutter: 1em,
+  figure(
+    image("scheduling-2.svg", width: 10cm, height: 9cm, fit: "cover"),
+  ),
+  text([
+    Concurrent
+
+    (pipeTo)
+  ]),
+)
+
 
 #slide("Permission system", [
   Virtual permission system that restricts access to OS resources.
@@ -112,11 +127,20 @@
 ])
 
 #slide("Memory management", [
-  JavaScript objects are garbage collected.
+  #grid(
+    columns: (1fr, auto),
+    column-gutter: 1em,
+    box([
+      JavaScript objects are garbage collected.
 
-  #linebreak()
-  #linebreak()
-  How does it cleanup native files, sockets and other resources?
+      #linebreak()
+      #linebreak()
+      How does it cleanup native files, sockets and other resources?
+    ]),
+    figure(
+      image("garbage-collection.png", width: 5cm, height: 4cm),
+    ),
+  )
 ])
 
 #slide("Resources", [
@@ -143,6 +167,35 @@
   ```
 ])
 
+#slide2("", [
+  #text(12pt, [
+    ```rust
+    struct DatabaseSync { ptr: *mut sqlite3 }
+
+    impl Drop for DatabaseSync {
+      fn drop(&mut self) {
+        unsafe { sqlite3_close(self.ptr) };
+      }
+    }
+
+    // ...
+    let value: v8::Local<v8::Object> =
+      wrap_cppgc_object(scope, Box::new(DatabaseSync { ptr }))
+    ```
+  ])
+])
+
+#grid(
+  columns: (1fr, auto),
+  column-gutter: 1em,
+  box([
+    Tracing
+  ]),
+  figure(
+    image("trace-ops.png"),
+  ),
+)
+
 #slide2("Bonus: Deno OS", [
   minimal Linux kernel build with a Deno userspace.
 
@@ -150,47 +203,12 @@
     columns: 2,
     stroke: 0.7pt + gray,
     inset: 4pt,
-    [
-      *Linux*
-    ],
-    [
-      *Deno*
-    ],
-
-    [
-      Processes
-    ],
-    [
-      Web Workers
-    ],
-
-    [
-      File descriptors (fd)
-    ],
-    [
-      Resource ids (rid)
-    ],
-
-    [
-      Syscalls
-    ],
-    [
-      Ops
-    ],
-
-    [
-      Scheduler
-    ],
-    [
-      Tokio
-    ],
-
-    [
-      man pages
-    ],
-    [
-      `deno types`
-    ],
+    [*Linux*], [*Deno*],
+    [Processes], [Web Workers],
+    [File descriptors (fd)], [Resource ids (rid)],
+    [Syscalls], [Ops],
+    [Scheduler], [Tokio],
+    [strace], [`--trace-ops`],
   )
 ])
 
@@ -210,10 +228,8 @@
 #slide("Thanks!", [
   Questions?
 
-  Source:
-
   #v(3cm)
   me\@littledivy.com
   #h(1fr)
-  discord.gg/deno
+  linkedin.com/in/littledivy
 ])
